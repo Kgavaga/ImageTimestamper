@@ -1,7 +1,8 @@
-from PIL import Image, ImageDraw, ImageFont, ExifTags
+from PIL import Image, ImageDraw, ImageFont
 from PIL.ExifTags import TAGS
 from datetime import datetime
 
+#Extracts the timestamp from the filename and inserts it into the image
 def insert_timestamp_from_filename_into_image(path_to_image:str, 
 ignorable_string:str,
 output_filename:str = "", 
@@ -39,6 +40,7 @@ size_of_timestamp:int = 20):
     else:
         image.save(output_filename)
 
+#Gets the current timestamp and inserts it into the image
 def insert_timestamp_into_image(path_to_image:str, 
 output_filename:str = "", 
 distance_to_border:int = 5, 
@@ -69,6 +71,7 @@ size_of_timestamp:int = 20):
     else:
         image.save(output_filename)
 
+#Reads the attribute where the original time of creation is saved and inserts it into the image
 def insert_timestamp_from_imagedata_into_image(path_to_image:str, 
 output_filename:str = "", 
 distance_to_border:int = 5, 
@@ -83,6 +86,7 @@ size_of_timestamp:int = 20):
     #Only get the filename with its extension of the filepath
     filename_with_extension = path_to_image.split("/")[-1]
 
+    #Figure out the tag_id of the attribute DateTime
     exifdata = image.getexif();
     tag_id = 0
     for tag_id in exifdata:
@@ -90,8 +94,7 @@ size_of_timestamp:int = 20):
         if(tag == "DateTime"):
             break
 
-
-    #Get the current timestamp
+    #Read the attribute DateTime which is the date of creation
     timestamp = str(exifdata.get(tag_id))
 
     #Get an object back that allows for drawing on an image
@@ -109,6 +112,8 @@ size_of_timestamp:int = 20):
 
 
 if __name__=="__main__":
+    #Example function calls
+
     #insert_timestamp_from_filename_into_image("Image_2021-09-09_09-00-00.png", "Image_")
     insert_timestamp_from_filename_into_image("Image_2021-09-09_09-00-00.JPG", "Image_", "NewImage.JPG", distance_to_border=5, color_of_timestamp=(255,0,0), size_of_timestamp=50)
     #insert_timestamp_into_image("Image_2021-01-01_20-00-00.png")
